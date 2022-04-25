@@ -24,7 +24,6 @@ export default function Slider({
     const [animationCoordinates, setAnimationCoordinates] = useState(startingAnimationCoordinates);
 
     useEffect(() => {
-        console.log("UseEffect fired!")
         var intervalId = setInterval(() => {
             slideLeft();
         }, 6000);
