@@ -12,7 +12,8 @@ module.exports = {
         "brand-blue": "#1f80e0",
         "brand-red": "#f15151",
         "brand-orange": "db882a",
-        "brand-dark-blue":"#131A28"
+        "brand-dark-blue":"#131A28",
+        "brand-bg":"#0C111B",
       },
       keyframes: {
         expandSearch: {

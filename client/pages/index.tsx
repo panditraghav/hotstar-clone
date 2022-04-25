@@ -4,15 +4,18 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Navbar from '../components/Navbar'
 import MenuItems from "../components/MenuItems";
-import Slider from "../components/Slider";
+import HeroCarousel from '../components/HeroCarousel'
+import VerticalCard from '../components/VerticalCard'
+import HorizontalCardList from "../components/HorizontalCardList"
 
 const Home: NextPage = () => {
   return (
     <div>
       <Navbar menuItems={<MenuItems />} />
-      <Slider />
+      <HeroCarousel />
+      <HorizontalCardList categoryTitle='Drama'/>
     </div>
   )
 }
 
-export default Home
+export default Home;

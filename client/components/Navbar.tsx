@@ -11,7 +11,7 @@ interface Props {
 export default function NavBar(props: Props) {
     const router = useRouter();
     return (
-        <nav className="bg-brand-dark-blue h-[72px] flex items-center px-16 justify-between">
+        <nav className="bg-brand-dark-blue h-[72px] flex items-center px-16 justify-between mb-4 sticky top-0 z-50 cursor-pointer" onClick={() => router.push("/")}>
             <div className="flex justify-center items-center">
                 <div className="flex flex-col h-3 justify-between mt-2 mr-4">
                     <div className="w-4 h-[2px] bg-gray-400"></div>
