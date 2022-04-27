@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 interface Props {
     slideWidth: number,
@@ -19,9 +19,9 @@ export default function Slider({
     children
 }: Props) {
     const startingAnimationCoordinates = children.map((value, index) => ({ from: slideWidth * (index - 1) + startingMargin, to: slideWidth * (index - 1) + startingMargin }));
-
     const [offset, setOffset] = useState(0);
     const [animationCoordinates, setAnimationCoordinates] = useState(startingAnimationCoordinates);
+    const [isSliderHover, setIsSliderHover] = useState(false);
 
     useEffect(() => {
         var intervalId = setInterval(() => {
@@ -60,6 +60,8 @@ export default function Slider({
         <div
             className={`bg-brand-bg relative overflow-hidden w-full z-0`}
             style={{ height: height }}
+            onMouseEnter={() => setIsSliderHover(true)}
+            onMouseLeave={() => setIsSliderHover(false)}
         >
             {children.map((slide, index) => {
                 return <motion.div
@@ -73,12 +75,15 @@ export default function Slider({
                 </motion.div>
             })}
 
-            < ChevronLeftRoundedIcon
-                className="absolute left-[-20px] top-[145px] text-8xl text-white cursor-pointer"
+
+            < ChevronLeftIcon
+                className="ease-linear transition absolute left-[-10px] top-[172px] text-6xl text-white cursor-pointer"
+                style={{ color: isSliderHover ? "white" : "transparent" }}
                 onClick={slideRight}
             />
-            <ChevronRightRoundedIcon
-                className="absolute right-[-20px] top-[145px] text-8xl text-white cursor-pointer"
+            <ChevronRightIcon
+                className="ease-linear transition absolute right-[-10px] top-[172px] text-6xl text-white cursor-pointer"
+                style={{ color: isSliderHover ? "white" : "transparent" }}
                 onClick={slideLeft}
             />
         </div >

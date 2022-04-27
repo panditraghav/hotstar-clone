@@ -12,10 +12,10 @@ let slides = [
         tags: ["Biopic", "2022"]
     },
     {
-        image: "/images/83.webp",
-        title: "Polar Bear",
-        description: "A polar bear's memory help her find her way to the ocean and fly in water.",
-        tags: ["English", "Animal Nature", "2022"]
+        image: "/images/pirates-of-the-carribean.webp",
+        title: "Pirates Of The Carribean",
+        description: "When captain barbosa kidnaps the governers daughter and her would be suitor...",
+        tags: ["Action","2003"]
     },
     {
         image: "/images/kaun-pravin-tambe.webp",
