@@ -1,10 +1,10 @@
-import Navbar from "../../components/Navbar";
 import MenuItems from "../../components/MenuItems";
+import Layout from "../../components/Layout";
 
 export default function Movies(){
     return (
-        <>
-            <Navbar menuItems={<MenuItems selectedMenu="Movies"/>}/>
-        </>
+        <Layout pageName="Movies">
+            
+        </Layout>
     )
 }

@@ -1,10 +1,10 @@
-import Navbar from "../../components/Navbar";
 import MenuItems from "../../components/MenuItems";
+import Layout from "../../components/Layout";
 
-export default function sports(){
+export default function Sports(){
     return (
-        <>
-            <Navbar menuItems={<MenuItems selectedMenu="Sports"/>}/>
-        </>
+        <Layout pageName="Sports">
+
+        </Layout>
     )
 }
