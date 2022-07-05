@@ -8,8 +8,29 @@ import MenuItems from "../components/MenuItems";
 import HeroCarousel from '../components/HeroCarousel'
 import VerticalCard from '../components/Card'
 import HorizontalCardList from "../components/HorizontalCardList"
+import { useUser } from '../context/UserContext'
+import { useEffect } from 'react'
+import { authFetcher } from '../utils/fetcher'
 
 const Home: NextPage = () => {
+  const { user, setUser } = useUser()
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const res = await authFetcher({
+          method: "get",
+          url: `${process.env.API_ROUTE}/auth`
+        })
+        setUser(res.data)
+        console.log(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getUser()
+  }, [])
+
   return (
     <div>
       <Layout>

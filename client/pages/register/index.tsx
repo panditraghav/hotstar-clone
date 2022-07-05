@@ -1,17 +1,24 @@
 import Layout from "../../components/Layout"
 import { motion } from "framer-motion"
 import { useState } from "react"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import validator from "validator"
 import Link from "next/link"
+import { useRouter } from "next/router"
+import Snackbar from "@mui/material"
+import Alert from "@mui/material"
 
 export default function Login() {
     const [password, setPassword] = useState("")
     const [email, setEmail] = useState("")
     const [emailIsValid, setEmailIsValid] = useState(true)
+    const [emailAlreadyExists, setEmailAlreadyExists] = useState(false)
+    const [passwordIsValid, setPasswordIsValid] = useState(true)
+
+    const router = useRouter()
 
     function isEmailValid() {
-        if (!validator?.isEmail(email)) {
+        if (!validator.isEmail(email)) {
             setEmailIsValid(false)
             return false
         } else {
@@ -20,11 +27,11 @@ export default function Login() {
         }
     }
     function isPasswordValid() {
-        if (password?.length >= 6) {
-            setEmailIsValid(true)
+        if (password.length >= 6) {
+            setPasswordIsValid(true)
             return true
         } else {
-            setEmailIsValid(false)
+            setPasswordIsValid(false)
             return false
         }
     }
@@ -33,18 +40,26 @@ export default function Login() {
         e.preventDefault();
 
         console.log(process.env.API_ROUTE)
-        if (!isEmailValid() && !isPasswordValid()) return
+        if (!(isPasswordValid() && isEmailValid())) {
+            console.log(isEmailValid(), isPasswordValid())
+            return
+        }
 
-        console.log(email, password, process.env.API_URL)
+
+        console.log(email, password)
 
         try {
             const res = await axios.post(process.env.API_ROUTE + "/auth/register", {
                 email,
                 password
             })
-            console.log(res.data)
+            setEmailAlreadyExists(false)
+            router.push("/login")
         } catch (error) {
-            console.log(error)
+            if (error.response.data.type === "email") {
+                console.log("Email error is here")
+                setEmailAlreadyExists(true)
+            }
         }
     }
 
@@ -67,9 +82,11 @@ export default function Login() {
                                 name="email"
                                 id="email"
                                 placeholder="Enter your email"
+                                value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                             {!emailIsValid && <span className="text-sm text-red-400">Please enter a valid email</span>}
+                            {emailAlreadyExists && <span className="text-sm text-red-400">Email already exists</span>}
                         </div>
                         <div className="my-8 px-2">
                             <input
@@ -79,9 +96,11 @@ export default function Login() {
                                 name="password"
                                 id="password"
                                 placeholder="Enter a password"
+                                value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
+                        {!passwordIsValid && <span className="text-sm text-red-400">Please enter a valid password</span>}
                         <button type="submit" className="w-full h-12 mt-4 bg-brand-blue rounded-sm">
                             CONTINUE
                         </button>

@@ -1,21 +1,24 @@
 import * as jwt from "jsonwebtoken"
+import logger from "../logger"
 
 const secretKey = "this is my secret key"
 
-export function signJwt(payload: string, expiresIn: string | number) {
-    return jwt.sign(payload, secretKey, {
+export function signJwt(uid: string, expiresIn: string | number) {
+
+    return jwt.sign({ uid }, secretKey, {
         expiresIn
     })
 }
 
-export function verifyJwt(token: string, secretOrKey: string) {
-    var payload = null 
-    var isExpired = null
+export function verifyJwt(token: string) {
+    let payload = null
+    let isExpired = null
     try {
-        payload = jwt.verify(token, secretOrKey)
+        payload = jwt.verify(token, secretKey)
+        return payload
     } catch (error: any) {
+        logger.error(error)
         isExpired = error.message === "jwt expired"
+        return null
     }
-
-    return { payload, isExpired }
 }

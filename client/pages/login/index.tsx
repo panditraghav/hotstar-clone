@@ -9,7 +9,7 @@ import { saveAccessToken } from "../../utils/user"
 import { UserContext } from "../../context/UserContext"
 
 export default function LoginForm() {
-    const {user,setUser} = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
     const [password, setPassword] = useState("")
     const [email, setEmail] = useState("")
     const [emailIsValid, setEmailIsValid] = useState(true)
@@ -36,16 +36,16 @@ export default function LoginForm() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        if (!isEmailValid() && !isPasswordValid()) return
+        if (!(isEmailValid() && isPasswordValid())) return
         try {
             const res = await axios.post(process.env.API_ROUTE + "/auth/login", {
                 email,
                 password,
             })
-            console.log(res.data.payload)
-            setUser(res.data.payload)
-            saveAccessToken(res.data.accessToken)
-            router.push("/") 
+            console.log(res.data)
+            setUser(res.data)
+            saveAccessToken(res.data)
+            router.push("/")
         } catch (error) {
             console.log("Error occured")
             console.log(error)
