@@ -4,7 +4,8 @@ import validator from "validator"
 
 export interface IUser {
     email: string,
-    password: string
+    password: string,
+    isAdmin: boolean
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -21,6 +22,7 @@ const userSchema = new mongoose.Schema<IUser>({
         required: true,
         minlength: [6, "Minimum password length is 6 characters!"]
     },
+    isAdmin:{type: Boolean, default: false}
 })
 
 userSchema.pre("save", async function (next) {

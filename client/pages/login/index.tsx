@@ -42,7 +42,6 @@ export default function LoginForm() {
                 email,
                 password,
             })
-            console.log(res.data)
             setUser(res.data)
             saveAccessToken(res.data)
             router.push("/")
@@ -54,7 +53,7 @@ export default function LoginForm() {
 
     return (
         <Layout>
-            <div style={{ height: "calc(100vh - 90px)" }} className="w-full top-0 flex justify-center items-center z-50">
+            <div style={{ height: "calc(100vh - 90px)" }} className="w-full top-0 flex justify-center items-center z-50 text-white">
                 <motion.div
                     style={{ background: "linear-gradient(to bottom, #192133, #111826)" }}
                     className="bg-slate-700 w-96 h-96 rounded-md px-12 py-8"
@@ -89,7 +88,9 @@ export default function LoginForm() {
                         <button type="submit" className="w-full h-12 mt-4 bg-brand-blue rounded-sm">
                             CONTINUE
                         </button>
+                        <div>
                         <span className="text-center w-full block mt-3">Or <Link href="/register"><a className="underline">register</a></Link> instead!</span>
+                        </div>
                     </form>
                 </motion.div>
             </div >

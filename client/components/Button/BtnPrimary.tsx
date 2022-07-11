@@ -1,18 +1,17 @@
 import { useRouter } from "next/router"
 
 interface Props {
-    name: string,
-    link: string
+    children: React.ReactNode
+    onClick?: () => void
 }
 
-export default function BtnPrimary(props: Props) {
-    const router = useRouter();
+export default function BtnPrimary({ children, onClick }: Props) {
     return (
         <button
-            onClick={()=> router.push(props.link)}
-            className="ml-3 bg-brand-blue text-xs font-bold font-sans rounded-md py-[1px] px-3"
+            onClick={onClick}
+            className="ml-3 bg-brand-blue hover:bg-[#1968b5] transition-all hover:text-gray-100 text-sm font-bold font-sans rounded-md py-2 px-5"
         >
-            {props.name}
+            {children}
         </button>
     )
 

@@ -9,6 +9,21 @@ import { getAccessToken } from '../utils/user'
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState(null)
 
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const res = await authFetcher({
+          method: "get",
+          url: `${process.env.API_ROUTE}/auth`
+        })
+        setUser(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getUser()
+  }, [])
+
   return (
     <UserContextProvider value={{ user, setUser }}>
       <NextNProgress />

@@ -1,11 +1,10 @@
 import Image from "next/image";
 import logo from "../public/logo-dark.svg";
 import Search from "../components/Search";
-import BtnPrimary from "../components/Button/BtnPrimary";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { useRouter } from "next/router"
-import { useContext, useState } from "react";
-import { UserContext } from "../context/UserContext";
+import { useState } from "react";
+import { useUser } from "../context/UserContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import RegisterForm from "./RegisterForm"
@@ -17,7 +16,7 @@ interface Props {
 
 export default function NavBar(props: Props) {
     const router = useRouter();
-    const userContext = useContext(UserContext)
+    const { user, setUser } = useUser()
     const [isUserMenuVisible, setIsUserMenuVisible] = useState(false)
 
     function toggleUserMenu() {
@@ -25,7 +24,7 @@ export default function NavBar(props: Props) {
     }
 
     function handleLogout() {
-        userContext.setUser(null)
+        setUser(null)
         removeAccessToken()
     }
 
@@ -48,18 +47,18 @@ export default function NavBar(props: Props) {
                 <Search />
                 <button
                     onClick={() => router.push("/subscribe")}
-                    className="ml-3 bg-brand-blue text-xs font-bold font-sans rounded-md py-[1px] px-3"
+                    className="ml-3 bg-brand-blue text-white text-xs font-bold font-sans rounded-md py-[1px] px-3"
                 >
                     SUBSCRIBE
                 </button>
-                {!userContext.user &&
+                {!user &&
                     <button
                         className="ml-3 text-sm text-gray-300 font-medium"
                         onClick={() => router.push("/login")}
                     >
                         LOGIN
                     </button>}
-                {userContext.user &&
+                {user &&
                     <div
                         className="relative"
                     >

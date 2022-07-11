@@ -39,14 +39,10 @@ export default function Login() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        console.log(process.env.API_ROUTE)
         if (!(isPasswordValid() && isEmailValid())) {
-            console.log(isEmailValid(), isPasswordValid())
             return
         }
 
-
-        console.log(email, password)
 
         try {
             const res = await axios.post(process.env.API_ROUTE + "/auth/register", {

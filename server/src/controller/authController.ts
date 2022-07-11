@@ -1,7 +1,7 @@
 import "dotenv/config"
 import { Request, Response } from "express"
 import * as jwt from "jsonwebtoken"
-import { verifyJwt, signJwt } from "../utils/jwt";
+import { verifyJwt, signJwt, IPayload } from "../utils/jwt";
 import User, { IUser } from "../models/User";
 import { HydratedDocument } from "mongoose"
 import * as bcrypt from "bcrypt"
@@ -47,14 +47,14 @@ export async function loginController(req: Request<{}, {}, AuthReqBodyType>, res
 
     if (!isRightPassword) return res.status(403).json({ message: "Incorrect username or password" })
 
-    const accessToken = signJwt(user._id.toString(), "7d")
+    const payload: IPayload = { uid: user._id.toString(), isAdmin: user.isAdmin }
+    const accessToken = signJwt(payload, "7d")
     res.send(accessToken)
 }
-type User = { uid: string, iat: number, exp: number }
 
 export async function authController(req: Request, res: Response) {
     if (res.locals.user) {
-        return res.json(res.locals.user.uid)
+        return res.json(res.locals.user)
     }
     return res.json(null)
 }
