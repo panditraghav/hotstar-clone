@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useUser } from "../context/UserContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import RegisterForm from "./RegisterForm"
 import { removeAccessToken } from "../utils/user";
 
 interface Props {
@@ -24,6 +23,7 @@ export default function NavBar(props: Props) {
     }
 
     function handleLogout() {
+        //@ts-ignore
         setUser(null)
         removeAccessToken()
     }

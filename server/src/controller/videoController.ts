@@ -17,7 +17,7 @@ export function uploadVideoController(req: Request, res: Response) {
     let extension: string = ""
 
     bb.on("file", (name, file, info) => {
-        const { mimeType } = info
+        let mimeType = info.mimeType
         extension = mimeType.split("/")[1]
         const videoPath = getVideoPath(fileName, extension)
         file.pipe(fs.createWriteStream(videoPath))
@@ -37,11 +37,10 @@ export function uploadVideoController(req: Request, res: Response) {
 
 export function streamVideoController(req: Request, res: Response) {
     const range = req.headers.range
-    const { fileName, mimeType } = req.params
+    const { fileName, extension } = req.params
     if (!range) return res.status(StatusCodes.BAD_REQUEST).send("Range header required")
-    if (!(fileName && mimeType)) return res.status(StatusCodes.BAD_REQUEST).send("Invalid url")
+    if (!(fileName && extension)) return res.status(StatusCodes.BAD_REQUEST).send("Invalid url")
 
-    const extension = mimeType.split("/")[1]
     const videoPath = getVideoPath(fileName, extension)
     const videoSize = fs.statSync(videoPath).size
     const chunkStart = Number(range.replace(/\D/g, ""))
@@ -52,7 +51,7 @@ export function streamVideoController(req: Request, res: Response) {
         "Content-Range": `bytes ${chunkStart}-${chunkEnd}/${videoSize}`,
         "Accept-Ranges": "bytes",
         "Content-Length": contentLength,
-        "Content-Type": "video/mp4",
+        "Content-Type": `video/${extension}`,
         "Access-Control-Allow-Origin": "cross-origin"
     }
 

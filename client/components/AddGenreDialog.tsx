@@ -9,7 +9,7 @@ interface Props {
 
 export default function AddGenreDialog({ open, onClose }: Props) {
     const [newGenre, setNewGenre] = useState("")
-    const [error, setError] = useState(null)
+    const [error, setError] = useState<null | string>(null)
 
     async function handleSave() {
         try {
@@ -25,7 +25,7 @@ export default function AddGenreDialog({ open, onClose }: Props) {
                 setError(null)
             }
         } catch (error) {
-            setError(error)
+            setError("Some error occured")
             console.log(error)
         }
         if (error === null) {

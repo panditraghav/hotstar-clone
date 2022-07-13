@@ -52,6 +52,7 @@ export default function Login() {
             setEmailAlreadyExists(false)
             router.push("/login")
         } catch (error) {
+            //@ts-ignore
             if (error.response.data.type === "email") {
                 console.log("Email error is here")
                 setEmailAlreadyExists(true)

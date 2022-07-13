@@ -42,6 +42,7 @@ export default function LoginForm() {
                 email,
                 password,
             })
+            //@ts-ignore
             setUser(res.data)
             saveAccessToken(res.data)
             router.push("/")
@@ -89,7 +90,7 @@ export default function LoginForm() {
                             CONTINUE
                         </button>
                         <div>
-                        <span className="text-center w-full block mt-3">Or <Link href="/register"><a className="underline">register</a></Link> instead!</span>
+                            <span className="text-center w-full block mt-3">Or <Link href="/register"><a className="underline">register</a></Link> instead!</span>
                         </div>
                     </form>
                 </motion.div>

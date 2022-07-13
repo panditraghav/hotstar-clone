@@ -4,7 +4,12 @@ import { Genre, GenreSchema, IGenre } from "./Genre";
 export interface IVideo {
     _id: Types.ObjectId;
     fileName: string;
-    mimeType: string;
+    extension: string;
+}
+export interface IBanner {
+    _id: Types.ObjectId;
+    fileName: string;
+    extension: string;
 }
 
 interface IEpisode {
@@ -25,9 +30,11 @@ export interface IShow {
     type: "movie" | "series";
     genres: Types.Array<IGenre>;
     video?: IVideo;
-    thumbnailId: string;
+    description: string;
+    banner: IBanner;
     seasons?: Types.DocumentArray<ISeason>;
 }
+
 
 
 const ShowSchema = new mongoose.Schema<IShow>({
@@ -44,18 +51,22 @@ const ShowSchema = new mongoose.Schema<IShow>({
         type: [GenreSchema],
         required: true,
     },
+    description: String,
     video: {
         fileName: String,
-        mimeType: String
+        extension: String
     },
-    thumbnailId: String,
+    banner: {
+        fileName: String,
+        extension: String
+    },
     seasons: [{
         number: Number,
         episodes: [{
             number: Number,
             video: {
                 fileName: String,
-                mimeType: String
+                extension: String
             },
             name: String
         }]

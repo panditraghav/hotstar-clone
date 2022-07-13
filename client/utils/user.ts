@@ -6,7 +6,7 @@ export function removeAccessToken() {
     localStorage.removeItem("accessToken")
 }
 
-export function getAccessToken(): string {
+export function getAccessToken() {
     let accessToken = localStorage.getItem("accessToken")
     return accessToken
 }

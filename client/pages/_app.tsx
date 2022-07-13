@@ -7,7 +7,7 @@ import { authFetcher } from '../utils/fetcher'
 import { getAccessToken } from '../utils/user'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<string | null>(null)
 
   useEffect(() => {
     async function getUser() {
@@ -25,10 +25,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
   return (
-    <UserContextProvider value={{ user, setUser }}>
+    //@ts-ignore
+    < UserContextProvider value={{ user, setUser }}>
       <NextNProgress />
       <Component {...pageProps} />
-    </UserContextProvider>
+    </ UserContextProvider>
   )
 }
 

@@ -1,20 +1,21 @@
-import authRouter from "./routes/auth"
+import authRouter from "./routes/authRouter"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import express, { Express, Request, Response } from "express"
 import deserializeUser from "./middleware/deserializeUser"
-import showRouter from "./routes/show"
-import videoRouter from "./routes/video"
-import genreRouter from "./routes/genre"
+import showRouter from "./routes/showRouter"
+import videoRouter from "./routes/videoRouter"
+import genreRouter from "./routes/genreRouter"
+import imageRouter from "./routes/imageRouter"
 
 const corsOptions = {
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "http://localhost:3001"],
 }
 
 export default function createApp(): Express {
     const app = express()
 
-    app.use("*",deserializeUser)
+    app.use("*", deserializeUser)
     app.use(cors(corsOptions))
     app.use(express.json())
 
@@ -22,6 +23,7 @@ export default function createApp(): Express {
     app.use("/show", showRouter)
     app.use("/video", videoRouter)
     app.use("/genre", genreRouter)
+    app.use("/image", imageRouter)
 
     return app
 }

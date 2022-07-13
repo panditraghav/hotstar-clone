@@ -2,7 +2,7 @@ import NavBar from "./Navbar";
 import MenuItems from "./MenuItems"
 
 interface Props {
-    children: Array<JSX.Element>,
+    children: React.ReactNode,
     pageName?: string
 }
 

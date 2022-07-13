@@ -3,7 +3,7 @@ import { useContext } from "react"
 
 interface IUserContext {
     user: string | null,
-    setUser: (user: string) => void | null
+    setUser: React.Dispatch<React.SetStateAction<string | null>> | null
 }
 
 export const UserContext = React.createContext<IUserContext>({
