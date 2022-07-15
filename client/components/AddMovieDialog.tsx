@@ -5,42 +5,21 @@ import { Done } from "@mui/icons-material";
 import MultipleSelect from "./MultipleSelect";
 import FileInput from "./FileInput";
 import axios from "axios";
-
-interface Props {
-    open: boolean;
-    onClose: () => void;
-}
-interface IMovieData {
-    type: "movie";
-    video: { fileName: string, extension: string } | null;
-    banner: { fileName: string, extension: string } | null;
-    name: string;
-    genres: { name: string }[] | null;
-    description: string;
-}
+import { IShow } from "../utils/interfaces";
 
 export default function AddMovieDialog({ open, onClose }: Props) {
     const theme = useTheme()
 
-    const [movieData, setMovieData] = useState<IMovieData>({
-        type: "movie",
-        video: null,
-        banner: null,
-        name: "",
-        genres: null,
-        description: ""
-    })
+    const [movieData, setMovieData] = useState<IShow>({})
+    const [canSubmit, setCanSubmit] = useState(false)
 
     const [videoUploadProgress, setVideoUploadProgress] = useState(0)
-    const [bannerUploadProgress, setBannerUploadProgress] = useState(0)
+    const [bannerImageUploadProgress, setBannerImageUploadProgress] = useState(0)
+    const [cardImageUploadProgress, setCardImageUploadProgress] = useState(0)
     const [genres, setGenres] = useState<string[]>([])
     const [originalGenres, setOriginalGenres] = useState(null)
     const [selectedGenres, setSelectedGenres] = useState<string[]>([])
     const [error, setError] = useState<string | null>(null)
-
-    const videoInputRef = useRef<HTMLInputElement>()
-    const bannerInputRef = useRef<HTMLInputElement>()
-
 
     useEffect(() => {
         setMovieData({
@@ -51,6 +30,7 @@ export default function AddMovieDialog({ open, onClose }: Props) {
                 }
             })
         })
+        console.log("Movie Data", movieData)
     }, [selectedGenres])
 
     useEffect(() => {
@@ -65,17 +45,17 @@ export default function AddMovieDialog({ open, onClose }: Props) {
             }
         }
         fetchGenre()
-    })
+    }, [])
 
     function handleAlertClose() {
         setError(null)
     }
 
-    async function handleVideoUpload() {
+    async function handleVideoUpload(e) {
+        let file = e.target.files[0]
         try {
-            if (videoInputRef.current && videoInputRef.current.files) {
+            if (file) {
                 const formData = new FormData()
-                const file = videoInputRef.current.files[0]
                 formData.append("video", file)
                 const res = await authFetcher({
                     method: "post",
@@ -86,37 +66,70 @@ export default function AddMovieDialog({ open, onClose }: Props) {
                         setVideoUploadProgress(progress)
                     }
                 })
-
-                setMovieData({
-                    ...movieData,
-                    video: { fileName: res.data.fileName, extension: res.data.extension },
+                console.log(res.data)
+                setMovieData((current) => {
+                    return {
+                        ...current,
+                        video: { fileName: res.data.fileName, extension: res.data.extension },
+                    }
                 })
+                console.log(movieData)
             }
         } catch (error) {
             setError("Some error occured")
         }
     }
 
-    async function handleBannerUpload() {
-        console.log("Banner upload")
+    async function handleBannerImageUpload(e) {
+        let file = e.target.files[0]
         try {
-            if (bannerInputRef.current && bannerInputRef.current.files) {
+            if (file) {
                 const formData = new FormData()
-                const file = bannerInputRef.current.files[0]
-                formData.append("banner", file)
+                formData.append("bannerImage", file)
                 const res = await authFetcher({
                     method: "post",
                     url: `${process.env.API_ROUTE}/image/`,
                     data: formData,
                     onUploadProgress: (p) => {
                         let progress = Math.round((p.loaded / p.total) * 100)
-                        setBannerUploadProgress(progress)
+                        setBannerImageUploadProgress(progress)
                     }
                 })
                 console.log(res.data)
-                setMovieData({
-                    ...movieData,
-                    banner: { fileName: res.data.fileName, extension: res.data.extension },
+                setMovieData((current) => {
+                    return {
+                        ...current,
+                        bannerImage: { fileName: res.data.fileName, extension: res.data.extension },
+                    }
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            setError("Some error occured")
+        }
+    }
+
+    async function handleCardImageUpload(e) {
+        const file = e.target.files[0]
+        try {
+            if (file) {
+                const formData = new FormData()
+                formData.append("cardImage", file)
+                const res = await authFetcher({
+                    method: "post",
+                    url: `${process.env.API_ROUTE}/image/`,
+                    data: formData,
+                    onUploadProgress: (p) => {
+                        let progress = Math.round((p.loaded / p.total) * 100)
+                        setCardImageUploadProgress(progress)
+                    }
+                })
+                console.log(res.data)
+                setMovieData((current) => {
+                    return {
+                        ...current,
+                        cardImage: { fileName: res.data.fileName, extension: res.data.extension },
+                    }
                 })
             }
         } catch (error) {
@@ -139,13 +152,9 @@ export default function AddMovieDialog({ open, onClose }: Props) {
         })
     }
 
-    function canSubmit(): boolean {
-        if (movieData.name !== "" && movieData.banner &&
-            movieData.description !== "" &&
-            movieData.video &&
-            (movieData.genres && movieData.genres.length > 0))
-            return true
-        else return false
+    function checkCanSubmit() {
+        if (movieData.name && movieData.name !== "" && movieData.bannerImage && movieData.cardImage && movieData.description && movieData.description !== "" && movieData.video && movieData.genres && movieData.genres.length > 0) return true
+        return false
     }
 
     async function handleSubmit() {
@@ -153,8 +162,9 @@ export default function AddMovieDialog({ open, onClose }: Props) {
             const res = await authFetcher({
                 method: "post",
                 url: `${process.env.API_ROUTE}/show`,
-                data: {...movieData },
+                data: { ...movieData, type: "movie" },
             })
+            console.log(res.data)
             if (res.data.code) return setError("This movie already exists")
             onClose()
         } catch (error) {
@@ -171,11 +181,11 @@ export default function AddMovieDialog({ open, onClose }: Props) {
         >
             <DialogTitle>Add Movie</DialogTitle>
             <DialogContent>
-                <FileInput accepts="video/mp4" inputRef={videoInputRef} label="Upload Video" onChangeHandler={handleVideoUpload} uploadProgress={videoUploadProgress} />
-                <FileInput accepts="image/png,image/jpeg" inputRef={bannerInputRef} label="Upload banner" onChangeHandler={handleBannerUpload} uploadProgress={bannerUploadProgress} />
+                <FileInput accepts="video/mp4" label="Upload Video" onChangeHandler={handleVideoUpload} uploadProgress={videoUploadProgress} />
+                <FileInput accepts="image/png,image/jpeg" label="Upload banner Image" onChangeHandler={handleBannerImageUpload} uploadProgress={bannerImageUploadProgress} />
+                <FileInput accepts="image/png,image/jpeg" label="Upload card Image" onChangeHandler={handleCardImageUpload} uploadProgress={cardImageUploadProgress} />
                 <Stack sx={{ my: 2 }}>
                     <TextField
-                        id=""
                         label="Name"
                         value={movieData.name}
                         onChange={handleNameChange}
@@ -195,7 +205,7 @@ export default function AddMovieDialog({ open, onClose }: Props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancle</Button>
-                <Button disabled={!canSubmit()} onClick={handleSubmit}>Submit</Button>
+                <Button disabled={!checkCanSubmit()} onClick={handleSubmit}>Submit</Button>
             </DialogActions>
             <Snackbar open={error !== null} autoHideDuration={1000} onClose={handleAlertClose}>
                 <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>

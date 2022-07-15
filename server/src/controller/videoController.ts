@@ -9,7 +9,7 @@ import { CorsRequest } from "cors"
 
 const nanoid = customAlphabet("12345678890abcdefghijklmnopqrstuvwxyz", 10)
 
-const CHUNK_SIZE = 1024 * 1024
+const CHUNK_SIZE = 5 * 1024 * 1024
 
 export function uploadVideoController(req: Request, res: Response) {
     const bb = busboy({ headers: req.headers })
@@ -38,6 +38,7 @@ export function uploadVideoController(req: Request, res: Response) {
 export function streamVideoController(req: Request, res: Response) {
     const range = req.headers.range
     const { fileName, extension } = req.params
+    logger.info(`Streaming video, fileName: ${fileName}, extension: ${extension}, range: ${range}`)
     if (!range) return res.status(StatusCodes.BAD_REQUEST).send("Range header required")
     if (!(fileName && extension)) return res.status(StatusCodes.BAD_REQUEST).send("Invalid url")
 

@@ -8,10 +8,10 @@ import { verifyJwt } from "../utils/jwt"
 const secret = process.env.SECRET || "ThisIsMySecret"
 
 export default function deserializeUser(req: Request, res: Response, next: NextFunction) {
-    const accessToken = req.headers["authorization"]?.split(" ")[1]
+    const accessToken = req.cookies.token
+    logger.info(`Access token from cookie: ${accessToken}`)
     if (!accessToken) return next()
     const payload = verifyJwt(accessToken)
-
     if (payload) {
         res.locals.user = payload
     }

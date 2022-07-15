@@ -6,7 +6,7 @@ export interface IGenre {
 }
 
 export const GenreSchema = new mongoose.Schema<IGenre>({
-    name: { type: String, required: true, unique: true }
+    name: { type: String, required: true }
 })
 
 export const Genre = mongoose.model("Gnere", GenreSchema)

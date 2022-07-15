@@ -29,7 +29,7 @@ export default function NavBar(props: Props) {
     }
 
     return (
-        <nav className="bg-brand-dark-blue h-[72px] flex items-center px-16 justify-between mb-4 sticky top-0 z-50">
+        <nav className="bg-brand-dark-blue h-[72px] flex items-center px-16 justify-between mb-4 sticky top-0 z-50 text-white">
             <div className="flex justify-center items-center">
                 <div className="flex flex-col h-3 justify-between mt-2 mr-4">
                     <div className="w-4 h-[2px] bg-gray-400"></div>
@@ -38,7 +38,7 @@ export default function NavBar(props: Props) {
                 </div>
                 <Link href="/">
                     <a href="">
-                        <Image className="cursor-pointer" src={logo} width={115} height={42} />
+                        <Image alt={"Hotstar logo"} className="cursor-pointer" src={logo} width={115} height={42} />
                     </a>
                 </Link>
                 {props.menuItems}

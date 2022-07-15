@@ -8,15 +8,13 @@ import videoRouter from "./routes/videoRouter"
 import genreRouter from "./routes/genreRouter"
 import imageRouter from "./routes/imageRouter"
 
-const corsOptions = {
-    origin: ["http://localhost:3000", "http://localhost:3001"],
-}
 
 export default function createApp(): Express {
     const app = express()
 
-    app.use("*", deserializeUser)
-    app.use(cors(corsOptions))
+    app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }))
+    app.use(cookieParser())
+    app.use(deserializeUser)
     app.use(express.json())
 
     app.use("/auth", authRouter)

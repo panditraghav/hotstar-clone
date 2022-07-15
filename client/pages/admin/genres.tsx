@@ -1,10 +1,12 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material"
 import { Box } from "@mui/system"
 import { useState, useEffect } from "react"
+import useSWR from "swr"
 import AddGenreDialog from "../../components/AddGenreDialog"
 import AdminLayout from "../../components/Admin/AdminLayout"
 import Sidebar from "../../components/Admin/Sidebar"
 import BtnPrimary from "../../components/Button/BtnPrimary"
+import { authFetcher } from "../../utils/fetcher"
 
 function GenreList(props: { genres: IGenre[] }) {
     return (
@@ -32,27 +34,10 @@ interface IGenre {
 
 export default function Genres() {
     const [isAddGenreDialogOpen, setIsAddGenreDialogOpen] = useState(false)
-    const [genres, setGenres] = useState<IGenre[]>([])
-    const [isFetching, setIsFetching] = useState(true)
-
-    useEffect(() => {
-        async function getGenres() {
-            try {
-                fetch(`${process.env.API_ROUTE}/genre`)
-                    .then((res) => res.json())
-                    .then(data => {
-                        setGenres(data)
-                        setIsFetching(false)
-                    })
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getGenres()
-        return () => {
-        }
-    }, [])
-
+    const { data: genres, error: genresError, mutate } = useSWR({
+        method: "get",
+        url: `${process.env.API_ROUTE}/genre`
+    }, authFetcher)
 
     function handleAddGenreClick() {
         setIsAddGenreDialogOpen(!isAddGenreDialogOpen)
@@ -60,6 +45,7 @@ export default function Genres() {
 
     function handleDialogClose() {
         setIsAddGenreDialogOpen(false)
+        mutate()
     }
 
 
@@ -75,7 +61,7 @@ export default function Genres() {
                     </BtnPrimary>
                 </div>
                 <div className="text-gray-200">
-                    {isFetching ? <h1>Fetching data...</h1> : <GenreList genres={genres} />}
+                    {genres && genres.data ? <GenreList genres={genres.data} /> : <h1>Fetching data...</h1>}
                 </div>
                 <AddGenreDialog
                     onClose={handleDialogClose}

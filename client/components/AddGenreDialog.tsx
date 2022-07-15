@@ -30,8 +30,12 @@ export default function AddGenreDialog({ open, onClose }: Props) {
         }
         if (error === null) {
             onClose()
-            location.reload()
         }
+    }
+
+    function canSave(): boolean {
+        if(newGenre != "") return true
+        return false
     }
 
     return (
@@ -55,7 +59,7 @@ export default function AddGenreDialog({ open, onClose }: Props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancle</Button>
-                <Button onClick={handleSave}>Save</Button>
+                <Button disabled={!canSave()} onClick={handleSave}>Save</Button>
             </DialogActions>
         </Dialog>
     )

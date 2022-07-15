@@ -6,6 +6,6 @@ import requireUser from "../middleware/requireUser";
 const videoRouter = Router()
 
 videoRouter.post("/", requireAdmin, uploadVideoController)
-videoRouter.get("/:fileName-:mimeType", requireUser, streamVideoController)
+videoRouter.get("/:fileName.:extension", streamVideoController)
 
 export default videoRouter

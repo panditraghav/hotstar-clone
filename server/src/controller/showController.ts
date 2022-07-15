@@ -9,6 +9,7 @@ export async function uploadShowController(req: Request<{}, {}, IShow>, res: Res
         await show.save()
         return res.json(show)
     } catch (error) {
+        logger.error(error)
         return res.json(error)
     }
 }
@@ -16,8 +17,12 @@ export async function uploadShowController(req: Request<{}, {}, IShow>, res: Res
 export async function getShowsByTypeController(req: Request, res: Response) {
     let { type } = req.params
     if (type) {
-        let shows = await Show.find({ type })
-        return res.send(shows)
+        try {
+            let shows = await Show.find({ type })
+            return res.json(shows)
+        } catch (error) {
+            return res.status(StatusCodes.BAD_REQUEST).json(error)
+        }
     }
     return res.status(StatusCodes.BAD_REQUEST).send("Type required")
 }
@@ -25,8 +30,25 @@ export async function getShowsByTypeController(req: Request, res: Response) {
 export async function getShowsByGenreController(req: Request, res: Response) {
     let { genre } = req.params
     if (genre) {
-        let shows = await Show.find({ "genres.name": genre })
-        return res.send(shows)
+        try {
+            let shows = await Show.find({ "genres.name": genre })
+            return res.json(shows)
+        } catch (error) {
+            return res.status(StatusCodes.BAD_REQUEST).json(error)
+        }
+    }
+    return res.status(StatusCodes.BAD_REQUEST).send("genre required")
+}
+
+export async function getShowByIdController(req: Request, res: Response) {
+    let { id } = req.params
+    if (id) {
+        try {
+            let show = await Show.findOne({ _id: id })
+            return res.json(show)
+        } catch (error) {
+            return res.status(StatusCodes.BAD_REQUEST).json(error)
+        }
     }
     return res.status(StatusCodes.BAD_REQUEST).send("genre required")
 }

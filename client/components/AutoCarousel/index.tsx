@@ -8,7 +8,7 @@ interface Props {
     startingMargin: number,
     height: number,
     padding: number,
-    children: JSX.Element[]
+    children: React.ReactNode
 }
 
 export default function Slider({
@@ -18,7 +18,12 @@ export default function Slider({
     height,
     children
 }: Props) {
-    const startingAnimationCoordinates = children.map((value, index) => ({ from: slideWidth * (index - 1) + startingMargin, to: slideWidth * (index - 1) + startingMargin }));
+    const startingAnimationCoordinates = children.map((value, index) => {
+        return {
+            from: slideWidth * (index - 1) + startingMargin,
+            to: slideWidth * (index - 1) + startingMargin
+        }
+    });
     const [offset, setOffset] = useState(0);
     const [animationCoordinates, setAnimationCoordinates] = useState(startingAnimationCoordinates);
     const [isSliderHover, setIsSliderHover] = useState(false);
@@ -28,7 +33,7 @@ export default function Slider({
             slideLeft();
         }, 6000);
         return () => clearInterval(intervalId);
-    }, [])
+    })
 
     function slideLeft() {
         setAnimationCoordinates(current => {
@@ -74,7 +79,6 @@ export default function Slider({
                     {slide}
                 </motion.div>
             })}
-
 
             < ChevronLeftIcon
                 className="ease-linear transition absolute left-[-10px] top-[172px] text-6xl text-white cursor-pointer"

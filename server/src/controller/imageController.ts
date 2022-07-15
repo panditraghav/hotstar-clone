@@ -2,7 +2,6 @@ import { Request, Response } from "express"
 import busboy from "busboy"
 import fs from "fs"
 import { getImagePath } from "../services/imageService"
-import { IBanner } from "../models/Show"
 import { customAlphabet } from "nanoid"
 import { StatusCodes } from "http-status-codes"
 

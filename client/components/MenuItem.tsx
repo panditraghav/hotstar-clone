@@ -20,7 +20,7 @@ export default function MenuItem(props: Props) {
     return (
         <span
             style={{ color: props.isSelected || isHovered ? "white" : "#D0D1D4" }}
-            className="font-sans mr-7 font-medium"
+            className="font-sans mr-7"
             onMouseEnter={toggleHover}
             onMouseLeave={toggleHover}
             // onClick={router.push(`/${props.link}`)}

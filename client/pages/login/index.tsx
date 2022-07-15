@@ -41,10 +41,12 @@ export default function LoginForm() {
             const res = await axios.post(process.env.API_ROUTE + "/auth/login", {
                 email,
                 password,
+            },{
+                withCredentials: true
             })
             //@ts-ignore
             setUser(res.data)
-            saveAccessToken(res.data)
+            console.log(res.data)
             router.push("/")
         } catch (error) {
             console.log("Error occured")

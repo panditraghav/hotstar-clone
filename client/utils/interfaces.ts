@@ -1,10 +1,10 @@
-export interface IVideo {
+export interface IGenre {
     _id: string;
-    fileName: string;
-    extension: string;
+    name: string;
 }
-export interface IBanner {
-    _id: string;
+
+export interface IFile {
+    _id: Types.ObjectId;
     fileName: string;
     extension: string;
 }
@@ -23,11 +23,13 @@ interface ISeason {
 }
 
 export interface IShow {
+    _id: string;
     name: string;
     type: "movie" | "series";
     genres: IGenre[];
-    video?: IVideo;
+    video?: IFile;
     description: string;
-    banner: IBanner;
+    bannerImage: IFile;
+    cardImage: IFile;
     seasons?: ISeason[];
 }

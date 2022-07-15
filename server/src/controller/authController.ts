@@ -49,7 +49,12 @@ export async function loginController(req: Request<{}, {}, AuthReqBodyType>, res
 
     const payload: IPayload = { uid: user._id.toString(), isAdmin: user.isAdmin }
     const accessToken = signJwt(payload, "7d")
-    res.send(accessToken)
+    console.log(accessToken)
+    return res.cookie("token", accessToken, {
+        httpOnly: false,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        sameSite: "lax"
+    }).json(user)
 }
 
 export async function authController(req: Request, res: Response) {

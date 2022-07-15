@@ -57,7 +57,7 @@ export default function CardSlider({ children, slideFactor, gap, cardWidth }: Pr
 
     return (
         <div className="relative">
-            <div className="relative -top-8 pt-8 h-64 overflow-x-hidden overflow-y-visible">
+            <div className="relative -top-8 pt-8 h-64 overflow-x-hidden overflow-y-hidden">
                 <motion.div
                     className="grid grid-flow-col absolute left-0 pl-6"
                     style={{gap:gap}}

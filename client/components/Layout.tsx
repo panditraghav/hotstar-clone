@@ -8,9 +8,9 @@ interface Props {
 
 export default function Layout({ children, pageName }: Props) {
     return (
-        <div>
+        <>
             <NavBar menuItems={<MenuItems selectedMenu={pageName} />} />
             {children}
-        </div>
+        </>
     )
 }
