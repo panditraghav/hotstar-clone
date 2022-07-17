@@ -11,7 +11,7 @@ interface IEpisode {
     _id: Types.ObjectId
     number: number;
     video: IFile;
-    name: string;
+    name?: string;
 }
 
 interface ISeason {

@@ -1,44 +1,28 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import useSWR from "swr"
 import Layout from "../../../components/Layout"
 import { authFetcher } from "../../../utils/fetcher"
-import { IShow } from "../../../utils/interfaces"
+import { IMovie } from "../../../utils/interfaces"
 
 export default function Play() {
-    const [show, setShow] = useState<IShow>()
-    const [loaded, setLoaded] = useState(false)
     const router = useRouter()
     const { id } = router.query
-
-    useEffect(() => {
-        async function getShow() {
-            console.log(id)
-            if (id)
-                try {
-                    const res = await authFetcher({
-                        method: "get",
-                        url: `${process.env.API_ROUTE}/show/${id}`
-                    })
-                    setShow(res.data)
-                    console.log(show)
-                    setLoaded(true)
-                    console.log(res.data)
-                } catch (error) {
-                    console.log(error)
-                }
+    const { data: movie, error } = useSWR(() => {
+        return {
+            method: "get",
+            url: `${process.env.API_ROUTE}/show/${id}`
         }
-        getShow()
-    }, [id])
+    }, authFetcher)
 
     return (
         <Layout>
             <div>
-                {loaded ?
+                {movie?.data ?
                     <video
-                        src={`${process.env.API_ROUTE}/video/${show.video.fileName}.${show.video.extension}`}
+                        src={`${process.env.API_ROUTE}/video/${movie.data.video.fileName}.${movie.data.video.extension}`}
                         typeof="video/mp4"
                         controls
-                        title={show.name}
                         className="w-full h-[454px] bg-black"
                     />
                     : <span className="text-white text-xl">loading...</span>

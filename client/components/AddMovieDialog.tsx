@@ -5,14 +5,25 @@ import { Done } from "@mui/icons-material";
 import MultipleSelect from "./MultipleSelect";
 import FileInput from "./FileInput";
 import axios from "axios";
-import { IShow } from "../utils/interfaces";
+import { IMovie } from "../utils/interfaces";
+
+interface Props {
+    open: boolean;
+    onClose: () => void;
+}
 
 export default function AddMovieDialog({ open, onClose }: Props) {
     const theme = useTheme()
 
-    const [movieData, setMovieData] = useState<IShow>({})
-    const [canSubmit, setCanSubmit] = useState(false)
-
+    const [movieData, setMovieData] = useState<Omit<IMovie, "_id">>({
+        name: "",
+        bannerImage: { fileName: "", extension: "" },
+        cardImage: { fileName: "", extension: "" },
+        video: { fileName: "", extension: "" },
+        description: "",
+        genres: [{ name: "" }],
+        type: "movie"
+    })
     const [videoUploadProgress, setVideoUploadProgress] = useState(0)
     const [bannerImageUploadProgress, setBannerImageUploadProgress] = useState(0)
     const [cardImageUploadProgress, setCardImageUploadProgress] = useState(0)
@@ -153,7 +164,7 @@ export default function AddMovieDialog({ open, onClose }: Props) {
     }
 
     function checkCanSubmit() {
-        if (movieData.name && movieData.name !== "" && movieData.bannerImage && movieData.cardImage && movieData.description && movieData.description !== "" && movieData.video && movieData.genres && movieData.genres.length > 0) return true
+        if (movieData.name && movieData.name !== "" && movieData.bannerImage.extension != "" && movieData.cardImage.fileName != "" && movieData.description !== "" && movieData.video?.fileName !== "" && movieData.genres && movieData.genres.length > 0) return true
         return false
     }
 

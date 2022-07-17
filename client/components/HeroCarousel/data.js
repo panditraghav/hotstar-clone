@@ -1,4 +1,4 @@
-let slides = [
+let shows = [
     {
         image: "/images/big-boss-ultimate.webp",
         name: "Big Boss Ultimate",
@@ -36,4 +36,4 @@ let slides = [
         tags: ["Documentry", "2022"]
     },
 ];
-export default slides;
+export default shows;

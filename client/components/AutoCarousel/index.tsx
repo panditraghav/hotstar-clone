@@ -8,7 +8,7 @@ interface Props {
     startingMargin: number,
     height: number,
     padding: number,
-    children: React.ReactNode
+    children: JSX.Element[]
 }
 
 export default function Slider({

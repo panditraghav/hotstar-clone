@@ -5,7 +5,7 @@ import { MutableRefObject } from "react"
 
 interface Props {
     uploadProgress: number;
-    onChangeHandler: () => void;
+    onChangeHandler: (e: any) => Promise<void>;
     label: string;
     accepts: string
 }

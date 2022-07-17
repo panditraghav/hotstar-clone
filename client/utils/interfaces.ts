@@ -1,25 +1,43 @@
 export interface IGenre {
-    _id: string;
     name: string;
 }
 
 export interface IFile {
-    _id: Types.ObjectId;
     fileName: string;
     extension: string;
 }
 
 interface IEpisode {
-    _id: string;
     number: number;
-    video: IVideo;
-    name: string;
+    video: IFile;
+    name?: string;
 }
 
-interface ISeason {
-    _id: string;
+export interface ISeason {
     number: number;
-    episodes: IEpisode[]
+    episodes?: IEpisode[]
+}
+
+export interface IMovie {
+    _id: string;
+    name: string;
+    type: "movie";
+    genres: IGenre[];
+    video: IFile;
+    description: string;
+    bannerImage: IFile;
+    cardImage: IFile;
+}
+
+export interface ISeries {
+    _id: string;
+    name: string;
+    type: "series";
+    genres: IGenre[];
+    description: string;
+    bannerImage: IFile;
+    cardImage: IFile;
+    seasons: ISeason[];
 }
 
 export interface IShow {
