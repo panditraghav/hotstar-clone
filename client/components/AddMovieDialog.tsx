@@ -215,7 +215,7 @@ export default function AddMovieDialog({ open, onClose }: Props) {
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancle</Button>
+                <Button onClick={onClose}>Cancel</Button>
                 <Button disabled={!checkCanSubmit()} onClick={handleSubmit}>Submit</Button>
             </DialogActions>
             <Snackbar open={error !== null} autoHideDuration={1000} onClose={handleAlertClose}>

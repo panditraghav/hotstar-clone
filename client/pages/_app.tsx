@@ -5,6 +5,13 @@ import { UserContext, UserContextProvider } from "../context/UserContext"
 import { useContext, useEffect, useState } from 'react'
 import { authFetcher } from '../utils/fetcher'
 import { getAccessToken } from '../utils/user'
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<string | null>(null)
@@ -27,8 +34,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     //@ts-ignore
     < UserContextProvider value={{ user, setUser }}>
-      <NextNProgress />
-      <Component {...pageProps} />
+      <ThemeProvider theme={darkTheme}>
+        <NextNProgress />
+        <Component {...pageProps} />
+      </ThemeProvider>
     </ UserContextProvider>
   )
 }

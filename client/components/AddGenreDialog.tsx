@@ -58,7 +58,7 @@ export default function AddGenreDialog({ open, onClose }: Props) {
                 {error && <Alert severity="error">{error}</Alert>}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancle</Button>
+                <Button onClick={onClose}>Cancel</Button>
                 <Button disabled={!canSave()} onClick={handleSave}>Save</Button>
             </DialogActions>
         </Dialog>

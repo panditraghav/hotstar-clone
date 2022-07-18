@@ -13,7 +13,7 @@ export default function Card({ width, height, show }: Props) {
     const [hovered, setHovered] = useState(false);
 
     return (
-        <Link href={`/movies/${show._id}`}>
+        <Link href={show.type === "movie" ? `/movies/${show._id}` : `/series/${show._id}`}>
             <div
                 className="cursor-pointer rounded-md relative transition-all ease-in-out duration-300 bg-brand-dark-blue hover:z-10 hover:scale-125"
                 style={{ width: width, height: height }}
@@ -29,7 +29,7 @@ export default function Card({ width, height, show }: Props) {
                 >
                     <div className="px-2 absolute bottom-0 h-2/3 ">
                         <span className="text-white text-[10px] font-medium">{show.name}</span><br />
-                        <p className="text-gray-400 text-[10px] font-medium leading-3">{String.prototype.padEnd(70,show.description)}...</p>
+                        <p className="text-gray-400 text-[10px] font-medium leading-3">{String.prototype.padEnd(70, show.description)}...</p>
                     </div>
                 </div>
                 <Image

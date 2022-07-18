@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
 
 interface Props {
-    onDelete: (id: number | string) => void;
+    onDelete: () => void;
     onClose: () => void;
     open: boolean;
     id: number | string;
@@ -21,7 +21,7 @@ export default function DeleteAlertDialog({ open, onDelete, id, onClose, title, 
                 <Button
                     color="warning"
                     autoFocus
-                    onClick={() => { onDelete(id); onClose() }}
+                    onClick={() => { onDelete(); onClose() }}
                 >
                     Delete
                 </Button>

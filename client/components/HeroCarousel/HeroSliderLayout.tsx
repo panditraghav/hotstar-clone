@@ -4,10 +4,11 @@ import Image from "next/image";
 import { IShow } from "../../utils/interfaces";
 
 interface Props {
-    show: IShow
+    show: IShow,
+    type?: "movie" | "series"
 }
 
-export default function HeroSliderLayout({ show }: Props) {
+export default function HeroSliderLayout({ show, type }: Props) {
     return (
         <div className="h-[444px] w-full relative">
             <div
@@ -42,18 +43,18 @@ export default function HeroSliderLayout({ show }: Props) {
                 <div className="w-3/5 text-left text-gray-300">
                     <p>{show.description}</p>
                 </div>
-                <div className="text-white">
-                    <Link href={`/movies/${show._id}/play`}>
+                {type && <div className="text-white">
+                    <Link href={type == "movie" ? `/movies/${show._id}/play` : `/series/${show._id}/play`}>
                         <div className="cursor-pointer text-2xl mt-12">
                             <PlayArrow fontSize="large" />
                             <span>
-                                Watch Movie
+                                Watch
                             </span>
                         </div>
                     </Link>
-                </div>
+                </div>}
             </div>
-        </div>
+        </div >
 
     )
 }

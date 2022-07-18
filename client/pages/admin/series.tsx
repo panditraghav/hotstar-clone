@@ -20,6 +20,7 @@ export default function Series() {
 
     function handleAddSeriesDialogClose() {
         setAddSeriesDialogOpen(false)
+        mutate()
     }
 
     return (

@@ -7,7 +7,7 @@ export interface IFile {
     extension: string;
 }
 
-interface IEpisode {
+export interface IEpisode {
     number: number;
     video: IFile;
     name?: string;
