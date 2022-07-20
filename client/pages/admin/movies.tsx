@@ -7,6 +7,7 @@ import Sidebar from "../../components/Admin/Sidebar"
 import useSWR from "swr"
 import ShowsTable from "../../components/ShowsTable"
 import EditMovieDialog from "../../components/EditMovieDialog"
+import DeleteAlertDialog from "../../components/DeleteAlertDialog"
 
 export default function Movies() {
     const [movieDialog, setMovieDialog] = useState<{
@@ -18,6 +19,12 @@ export default function Movies() {
         showId: null,
         edit: false
     })
+    const [deleteMovieDialog, setDeleteMovieDialog] = useState<{
+        open: boolean;
+        showId: string;
+        showName: string;
+    }>({ open: false, showId: "", showName: "" })
+
     const { data: movies, error, mutate } = useSWR({
         method: "get",
         url: `${process.env.API_ROUTE}/show/all/type=movie`
@@ -29,8 +36,25 @@ export default function Movies() {
     }
 
     function handleOnEdit(showId: string) {
-        setMovieDialog({ open: true, showId: showId , edit: true})
+        setMovieDialog({ open: true, showId: showId, edit: true })
     }
+    function handleDeleteMovie(showId: string, showName: string) {
+        setDeleteMovieDialog({ showId: showId, open: true, showName: showName })
+    }
+
+    async function deleteMovie(showId: string) {
+        try {
+            const res = await authFetcher({
+                method: "delete",
+                url: `${process.env.API_ROUTE}/show/${showId}`
+            })
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+        mutate()
+    }
+
 
     return (
         <AdminLayout sidebar={<Sidebar selectedItem={"Movies"} />}>
@@ -46,6 +70,7 @@ export default function Movies() {
                 {movies && movies.data && <ShowsTable
                     shows={movies.data}
                     onEdit={handleOnEdit}
+                    onDelete={handleDeleteMovie}
                 />}
                 {!movies && <span className="text-white">Loading ....</span>}
 
@@ -54,6 +79,13 @@ export default function Movies() {
                     open={movieDialog.open}
                     edit={movieDialog.edit}
                     showId={movieDialog.showId}
+                />
+                <DeleteAlertDialog
+                    open={deleteMovieDialog.open}
+                    title={`Delete ${deleteMovieDialog.showName}`}
+                    description={`Do you want to delete ${deleteMovieDialog.showName}?`}
+                    onClose={() => setDeleteMovieDialog({ ...deleteMovieDialog, open: false })}
+                    onDelete={() => deleteMovie(deleteMovieDialog.showId)}
                 />
             </div>
         </AdminLayout>

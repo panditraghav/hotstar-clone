@@ -20,7 +20,11 @@ export default function Series() {
         showId: null
     }>({ open: false, showId: null })
 
-    const [deleteSeriesDialog, setDeleteSeriesDialog] = useState({open: false, showId: -1})
+    const [deleteSeriesDialog, setDeleteSeriesDialog] = useState<{
+        open: boolean;
+        showId: string;
+        showName: string;
+    }>({ open: false, showId: "", showName: "" })
 
     const { data: series, error: seriesError, mutate } = useSWR({
         method: "get",
@@ -40,6 +44,22 @@ export default function Series() {
         console.log(showId)
         setSeriesDialog({ showId: showId, open: true, edit: true })
     }
+    function handleDeleteSeries(showId: string, showName: string) {
+        setDeleteSeriesDialog({ showId: showId, open: true, showName: showName })
+    }
+
+    async function deleteSeries(showId: string) {
+        try {
+            const res = await authFetcher({
+                method: "delete",
+                url: `${process.env.API_ROUTE}/show/${showId}`
+            })
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+        mutate()
+    }
 
     return (
         <AdminLayout sidebar={<Sidebar selectedItem={"Series"} />}>
@@ -52,7 +72,7 @@ export default function Series() {
                         Add Series
                     </BtnPrimary>
                 </div>
-                {series && series.data && <ShowsTable onEdit={handleEditSeries} shows={series.data} />}
+                {series && series.data && <ShowsTable onEdit={handleEditSeries} onDelete={handleDeleteSeries} shows={series.data} />}
                 {!series && <span className="text-white">Loading ....</span>}
 
                 <SeriesDialog
@@ -61,9 +81,13 @@ export default function Series() {
                     edit={seriesDialog.edit}
                     showId={seriesDialog.showId}
                 />
-                {/* <DeleteAlertDialog 
-
-                /> */}
+                <DeleteAlertDialog
+                    open={deleteSeriesDialog.open}
+                    title={`Delete ${deleteSeriesDialog.showName}`}
+                    description={`Do you want to delete ${deleteSeriesDialog.showName}?`}
+                    onClose={() => setDeleteSeriesDialog({ ...deleteSeriesDialog, open: false })}
+                    onDelete={() => deleteSeries(deleteSeriesDialog.showId)}
+                />
             </div>
         </AdminLayout>
     )

@@ -62,3 +62,15 @@ export async function getShowByIdController(req: Request, res: Response) {
     }
     return res.status(StatusCodes.BAD_REQUEST).send("genre required")
 }
+
+export async function deleteShowController(req: Request, res: Response) {
+    let { id } = req.params
+    if (id) {
+        try {
+            let show = await Show.findByIdAndDelete(id)
+            return res.json(show)
+        } catch (error) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
+        }
+    }
+}

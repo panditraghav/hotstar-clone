@@ -1,11 +1,11 @@
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
-import { Edit } from "@mui/icons-material"
+import { Delete, Edit } from "@mui/icons-material"
 import { IShow } from "../utils/interfaces"
 
 interface Props {
     shows: IShow[];
     onEdit: (showId: string) => void;
-    onEdit: (showId: string) => void;
+    onDelete: (showId: string, showName: string) => (void | Promise<void>);
 }
 
 export default function ShowsTable({ shows, onEdit, onDelete }: Props) {
@@ -17,6 +17,7 @@ export default function ShowsTable({ shows, onEdit, onDelete }: Props) {
                         <TableCell>Name</TableCell>
                         <TableCell align="left">Genre</TableCell>
                         <TableCell align="left">Description</TableCell>
+                        <TableCell></TableCell>
                         <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
@@ -34,6 +35,11 @@ export default function ShowsTable({ shows, onEdit, onDelete }: Props) {
                             <TableCell align="left">
                                 <IconButton onClick={() => onEdit(row._id)}>
                                     <Edit />
+                                </IconButton>
+                            </TableCell>
+                            <TableCell align="left">
+                                <IconButton onClick={() => onDelete(row._id, row.name)}>
+                                    <Delete sx={{ color: "warning.main" }} />
                                 </IconButton>
                             </TableCell>
                         </TableRow>

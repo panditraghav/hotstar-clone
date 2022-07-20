@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
 
 interface Props {
-    onDelete: () => void;
+    onDelete: () => (void | Promise<void>);
     onClose: () => void;
     open: boolean;
     title: string;
