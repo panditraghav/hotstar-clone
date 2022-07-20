@@ -6,6 +6,7 @@ import Sidebar from "../../components/Admin/Sidebar"
 import BtnPrimary from "../../components/Button/BtnPrimary"
 import ShowsTable from "../../components/ShowsTable"
 import { authFetcher } from "../../utils/fetcher"
+import DeleteAlertDialog from "../../components/DeleteAlertDialog"
 
 export default function Series() {
     const [seriesDialog, setSeriesDialog] = useState<{
@@ -13,10 +14,14 @@ export default function Series() {
         showId: string | null;
         edit: boolean;
     }>({ open: false, showId: null, edit: false })
+
     const [editSeries, setEditSeries] = useState<{
         open: boolean,
         showId: null
     }>({ open: false, showId: null })
+
+    const [deleteSeriesDialog, setDeleteSeriesDialog] = useState({open: false, showId: -1})
+
     const { data: series, error: seriesError, mutate } = useSWR({
         method: "get",
         url: `${process.env.API_ROUTE}/show/all/type=series`
@@ -56,6 +61,9 @@ export default function Series() {
                     edit={seriesDialog.edit}
                     showId={seriesDialog.showId}
                 />
+                {/* <DeleteAlertDialog 
+
+                /> */}
             </div>
         </AdminLayout>
     )

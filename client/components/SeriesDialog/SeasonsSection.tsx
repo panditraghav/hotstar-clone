@@ -9,12 +9,14 @@ import AddEpisodesDialog from "./AddEpisodesDialog";
 interface SeasonsSectionProps {
     seasons: ISeason[],
     handleDeleteSeason: (id: number | string) => void
+    handleDeleteEpisode: (seasonNumber: number, episodeNumber: number) => void
     handleEditSeason: (newSeasonNumber: number, index: number) => void
     handleEpisodeSave: (season: ISeason, episode: IEpisode) => void
 }
 
-export default function SeasonsSection({ seasons, handleDeleteSeason, handleEditSeason, handleEpisodeSave }: SeasonsSectionProps) {
+export default function SeasonsSection({ seasons, handleDeleteSeason, handleEditSeason, handleEpisodeSave, handleDeleteEpisode }: SeasonsSectionProps) {
     const [deleteSeasonDialog, setDeleteSeasonDialog] = useState({ open: false, number: 0 })
+    const [deleteEpisodeDialog, setDeleteEpisodeDialog] = useState({ open: false, seasonNumber: -1, episodeNumber: -1 })
     const [addEpisode, setAddEpisode] = useState<{
         open: boolean,
         season: ISeason
@@ -44,7 +46,9 @@ export default function SeasonsSection({ seasons, handleDeleteSeason, handleEdit
                                     <Stack key={episode.number} direction="row" justifyContent="space-between" alignItems="center">
                                         <Typography>Episode {episode.number}</Typography>
                                         <Box>
-                                            <IconButton>
+                                            <IconButton
+                                                onClick={() => setDeleteEpisodeDialog({ open: true, seasonNumber: season.number, episodeNumber: episode.number })}
+                                            >
                                                 <Delete sx={{ color: "warning.main" }} />
                                             </IconButton>
                                         </Box>
@@ -75,7 +79,13 @@ export default function SeasonsSection({ seasons, handleDeleteSeason, handleEdit
                 title={`Do you want to delete Season ${deleteSeasonDialog.number}?`}
                 description="If you delete this season all the episodes it contains will get be deleted!"
                 onDelete={() => handleDeleteSeason(deleteSeasonDialog.number)}
-                id={deleteSeasonDialog.number}
+            />
+            <DeleteAlertDialog
+                open={deleteEpisodeDialog.open}
+                onClose={() => setDeleteEpisodeDialog({ ...deleteEpisodeDialog, open: false })}
+                title={`Do you want to delete Episode ${deleteEpisodeDialog.episodeNumber}?`}
+                description=""
+                onDelete={() => handleDeleteEpisode(deleteEpisodeDialog.seasonNumber, deleteEpisodeDialog.episodeNumber)}
             />
             <EditSeasonDialog
                 open={editSeasonDialog.open}

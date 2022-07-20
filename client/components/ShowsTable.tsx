@@ -4,10 +4,11 @@ import { IShow } from "../utils/interfaces"
 
 interface Props {
     shows: IShow[];
-    onEdit: (showId: string) => void
+    onEdit: (showId: string) => void;
+    onEdit: (showId: string) => void;
 }
 
-export default function ShowsTable({ shows, onEdit }: Props) {
+export default function ShowsTable({ shows, onEdit, onDelete }: Props) {
     return (
         <TableContainer component={Paper}>
             <Table sx={{}} aria-label="simple table">

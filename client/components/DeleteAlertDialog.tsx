@@ -4,12 +4,11 @@ interface Props {
     onDelete: () => void;
     onClose: () => void;
     open: boolean;
-    id: number | string;
     title: string;
     description: string;
 }
 
-export default function DeleteAlertDialog({ open, onDelete, id, onClose, title, description }: Props) {
+export default function DeleteAlertDialog({ open, onDelete, onClose, title, description }: Props) {
     return (
         <Dialog open={open} maxWidth="sm" fullWidth onClose={onClose}>
             <DialogTitle>{title}</DialogTitle>

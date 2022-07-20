@@ -199,6 +199,26 @@ export default function SeriesDialog({ open, onClose, edit, showId }: Props) {
         })
     }
 
+    function deleteEpisode(seasonNumber: number, episodeNumber: number) {
+        setSeriesData(currentData => {
+            let newSeasons = currentData.seasons?.map(s => {
+                if (s.number === seasonNumber) {
+                    let newEpisodes = s.episodes?.filter((e) => e.number !== episodeNumber)
+                    return {
+                        ...s,
+                        episodes: newEpisodes
+                    }
+                } else {
+                    return s
+                }
+            })
+            return {
+                ...currentData,
+                seasons: newSeasons
+            }
+        })
+    }
+
     async function handleSaveSeries() {
         try {
             if (edit) {
@@ -291,6 +311,7 @@ export default function SeriesDialog({ open, onClose, edit, showId }: Props) {
                         <SeasonsSection
                             seasons={seriesData.seasons}
                             handleDeleteSeason={deleteSeason}
+                            handleDeleteEpisode={deleteEpisode}
                             handleEditSeason={editSeason}
                             handleEpisodeSave={saveEpisode}
                         />
