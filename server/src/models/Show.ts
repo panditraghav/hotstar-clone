@@ -21,6 +21,7 @@ interface ISeason {
 }
 
 export interface IShow {
+    _id: string;
     name: string;
     type: "movie" | "series";
     genres: Types.Array<IGenre>;

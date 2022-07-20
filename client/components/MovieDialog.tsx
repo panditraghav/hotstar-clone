@@ -10,12 +10,14 @@ import { IMovie } from "../utils/interfaces";
 interface Props {
     open: boolean;
     onClose: () => void;
+    edit?: boolean;
+    showId?: string;
 }
 
-export default function AddMovieDialog({ open, onClose }: Props) {
+export default function MovieDialog({ open, onClose, edit, showId }: Props) {
     const theme = useTheme()
 
-    const [movieData, setMovieData] = useState<Omit<IMovie, "_id">>({
+    const [movieData, setMovieData] = useState<IMovie>({
         name: "",
         bannerImage: { fileName: "", extension: "" },
         cardImage: { fileName: "", extension: "" },
@@ -33,6 +35,31 @@ export default function AddMovieDialog({ open, onClose }: Props) {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
+        async function getMovie() {
+            const res = await authFetcher({
+                method: "get",
+                url: `${process.env.API_ROUTE}/show/${showId}`
+            })
+            setMovieData(res.data)
+            setSelectedGenres(res.data.genres.map(genre => genre.name))
+        }
+        if (edit && showId) {
+            getMovie()
+        } else {
+            setMovieData({
+                name: "",
+                bannerImage: { fileName: "", extension: "" },
+                cardImage: { fileName: "", extension: "" },
+                video: { fileName: "", extension: "" },
+                description: "",
+                genres: [{ name: "" }],
+                type: "movie"
+            })
+            setSelectedGenres([])
+        }
+    }, [edit, showId])
+
+    useEffect(() => {
         setMovieData({
             ...movieData,
             genres: selectedGenres.map(genre => {
@@ -41,7 +68,6 @@ export default function AddMovieDialog({ open, onClose }: Props) {
                 }
             })
         })
-        console.log("Movie Data", movieData)
     }, [selectedGenres])
 
     useEffect(() => {
@@ -77,14 +103,12 @@ export default function AddMovieDialog({ open, onClose }: Props) {
                         setVideoUploadProgress(progress)
                     }
                 })
-                console.log(res.data)
                 setMovieData((current) => {
                     return {
                         ...current,
                         video: { fileName: res.data.fileName, extension: res.data.extension },
                     }
                 })
-                console.log(movieData)
             }
         } catch (error) {
             setError("Some error occured")
@@ -106,7 +130,6 @@ export default function AddMovieDialog({ open, onClose }: Props) {
                         setBannerImageUploadProgress(progress)
                     }
                 })
-                console.log(res.data)
                 setMovieData((current) => {
                     return {
                         ...current,
@@ -135,7 +158,6 @@ export default function AddMovieDialog({ open, onClose }: Props) {
                         setCardImageUploadProgress(progress)
                     }
                 })
-                console.log(res.data)
                 setMovieData((current) => {
                     return {
                         ...current,
@@ -170,13 +192,19 @@ export default function AddMovieDialog({ open, onClose }: Props) {
 
     async function handleSubmit() {
         try {
-            const res = await authFetcher({
-                method: "post",
-                url: `${process.env.API_ROUTE}/show`,
-                data: { ...movieData, type: "movie" },
-            })
-            console.log(res.data)
-            if (res.data.code) return setError("This movie already exists")
+            if (!edit) {
+                const res = await authFetcher({
+                    method: "post",
+                    url: `${process.env.API_ROUTE}/show`,
+                    data: { ...movieData, type: "movie" },
+                })
+            } else {
+                const res = await authFetcher({
+                    method: "patch",
+                    url: `${process.env.API_ROUTE}/show`,
+                    data: { ...movieData, type: "movie" },
+                })
+            }
             onClose()
         } catch (error) {
             console.log(error)

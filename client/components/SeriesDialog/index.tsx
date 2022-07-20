@@ -1,4 +1,4 @@
-import { Add, ConstructionOutlined, Delete, Edit, StayCurrentLandscape } from "@mui/icons-material";
+import { Add, ConstructionOutlined, Delete, Edit, SettingsPhoneTwoTone, StayCurrentLandscape } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField, Stack, InputLabel } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
@@ -13,12 +13,19 @@ import ImageUploader from "../ImageUploader";
 
 interface Props {
     open: boolean;
-    onClose: () => void
+    onClose: () => void;
+    edit?: boolean;
+    showId?: string;
 }
 
-export default function AddSeriesDialog({ open, onClose }: Props) {
+export default function SeriesDialog({ open, onClose, edit, showId }: Props) {
     const [seriesData, setSeriesData] = useState<Partial<ISeries>>({
         type: "series",
+        bannerImage: { fileName: "", extension: "" },
+        cardImage: { fileName: "", extension: "" },
+        description: "",
+        name: "",
+        genres: [{ name: "" }],
     })
     const { data: genres, error: genreError } = useSWR({
         method: "get",
@@ -29,6 +36,31 @@ export default function AddSeriesDialog({ open, onClose }: Props) {
     const [cardImageUploadProgress, setCardImageUploadProgress] = useState(0)
     const [bannerImageUploadProgress, setBannerImageUploadProgress] = useState(0)
     const [selectedGenres, setSelectedGenres] = useState<string[]>([])
+
+    useEffect(() => {
+        async function getShow() {
+            const res = await authFetcher({
+                method: "get",
+                url: `${process.env.API_ROUTE}/show/${showId}`
+            })
+            setSeriesData(res.data)
+            setSelectedGenres(res.data.genres?.map(genre => genre.name))
+        }
+
+        if (edit && showId) {
+            getShow()
+        } else {
+            setSeriesData({
+                type: "series",
+                bannerImage: { fileName: "", extension: "" },
+                cardImage: { fileName: "", extension: "" },
+                description: "",
+                name: "",
+                genres: [{ name: "" }],
+            })
+            setSelectedGenres([])
+        }
+    }, [showId, edit])
 
     useEffect(() => {
         setSeriesData(currentData => {
@@ -59,7 +91,6 @@ export default function AddSeriesDialog({ open, onClose }: Props) {
                         setBannerImageUploadProgress(progress)
                     }
                 })
-                console.log(res.data)
                 setSeriesData((current) => {
                     return {
                         ...current,
@@ -68,7 +99,6 @@ export default function AddSeriesDialog({ open, onClose }: Props) {
                 })
             }
         } catch (error) {
-            console.log(error)
             setError("Some error occured")
         }
     }
@@ -88,8 +118,6 @@ export default function AddSeriesDialog({ open, onClose }: Props) {
                         setCardImageUploadProgress(progress)
                     }
                 })
-                console.log(res.data)
-                console.log(seriesData)
                 setSeriesData((current) => {
                     return {
                         ...current,
@@ -98,7 +126,6 @@ export default function AddSeriesDialog({ open, onClose }: Props) {
                 })
             }
         } catch (error) {
-            console.log(error)
             setError("Some error occured")
         }
     }
@@ -174,12 +201,20 @@ export default function AddSeriesDialog({ open, onClose }: Props) {
 
     async function handleSaveSeries() {
         try {
-            const res = authFetcher({
-                method: "post",
-                url: `${process.env.API_ROUTE}/show`,
-                data: seriesData
-            })
-            console.log(res.data)
+            if (edit) {
+                const res = await authFetcher({
+                    method: "patch",
+                    url: `${process.env.API_ROUTE}/show/`,
+                    data: seriesData
+                })
+                console.log(res.data)
+            } else {
+                const res = await authFetcher({
+                    method: "post",
+                    url: `${process.env.API_ROUTE}/show`,
+                    data: seriesData
+                })
+            }
         } catch (error) {
             console.log(error)
             setError("Some error occured!")
@@ -188,7 +223,6 @@ export default function AddSeriesDialog({ open, onClose }: Props) {
     }
 
     function canSave(): boolean {
-        console.log(seriesData)
         if (seriesData.name && seriesData.name !== "" &&
             seriesData.description && seriesData.description !== "" &&
             seriesData.bannerImage && seriesData.cardImage &&

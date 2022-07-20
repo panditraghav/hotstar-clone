@@ -14,6 +14,16 @@ export async function uploadShowController(req: Request<{}, {}, IShow>, res: Res
     }
 }
 
+export async function updateShowController(req: Request<{}, {}, IShow>, res: Response) {
+    try {
+        let show = await Show.findByIdAndUpdate(req.body._id, req.body)
+        return res.json(show)
+    } catch (error) {
+        logger.error(error)
+        return res.json(error)
+    }
+}
+
 export async function getShowsByTypeController(req: Request, res: Response) {
     let { type } = req.params
     if (type) {

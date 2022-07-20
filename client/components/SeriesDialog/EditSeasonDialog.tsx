@@ -13,10 +13,9 @@ interface EditSeasonDialogProps {
 
 export default function EditSeasonDialog({ seasonNumber, seasonIndex, onClose, open, onSave }: EditSeasonDialogProps) {
     const [newSeasonNumber, setNewSeasonNumber] = useState(-1)
-    useEffect(()=>{
+    useEffect(() => {
         setNewSeasonNumber(seasonNumber)
-    },[seasonNumber])
-    console.log(seasonNumber, newSeasonNumber)
+    }, [seasonNumber])
     return (
         <>
             <Dialog maxWidth="md" fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -32,7 +31,7 @@ export default function EditSeasonDialog({ seasonNumber, seasonIndex, onClose, o
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>Cancel</Button>
-                    <Button onClick={() => {console.log(newSeasonNumber); onSave(newSeasonNumber, seasonIndex); onClose() }}>Save</Button>
+                    <Button onClick={() => { onSave(newSeasonNumber, seasonIndex); onClose() }}>Save</Button>
                 </DialogActions>
             </Dialog>
         </>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 
@@ -12,22 +12,30 @@ interface Props {
 }
 
 export default function CardSlider({ children, slideFactor, gap, cardWidth, cardHeight }: Props) {
-    const slideLength = (slideFactor + gap / 2) * cardWidth; //128px = 8rem
+    const slidingLength = (slideFactor) * cardWidth + gap / 2;
     const [sliderCoordinate, setSliderCoordinate] = useState({ from: 0, to: 0 });
     const [canSlideRight, setCanSlideRight] = useState(false);
     const [canSlideLeft, setCanSlideLeft] = useState((children.length || 1) * (cardWidth + gap) > 1200);
+    const sliderRef = useRef()
+
+    useEffect(() => {
+        setCanSlideLeft(sliderRef.current.offsetWidth > window.innerWidth)
+        window.addEventListener("resize", () => {
+            setCanSlideLeft(sliderRef.current.offsetWidth > window.innerWidth)
+        })
+    }, [children])
 
     function slideRight() {
         setSliderCoordinate((currentCoordinates) => {
-            var from = currentCoordinates.to;
-            var to = currentCoordinates.to + slideLength;
-            if (currentCoordinates.to + slideLength >= 0) {
+            let from = currentCoordinates.to;
+            let to = currentCoordinates.to + slidingLength;
+            if (currentCoordinates.to + slidingLength >= 0) {
                 to = 0;
                 from = currentCoordinates.to
                 setCanSlideRight(false);
             }
 
-            if (!(currentCoordinates.to - slideLength >= - (((children.length || 1) - 4) * (cardWidth + gap)))) {
+            if (!(currentCoordinates.to - slidingLength >= - (((children.length || 1) - 4) * (cardWidth + gap)))) {
                 setCanSlideLeft(true);
             }
 
@@ -39,9 +47,9 @@ export default function CardSlider({ children, slideFactor, gap, cardWidth, card
     }
     function slideLeft() {
         setSliderCoordinate((currentCoordinates) => {
-            var from = currentCoordinates.to;
-            var to = currentCoordinates.to - slideLength;
-            if (currentCoordinates.to - slideLength <= - (((children.length || 1) - 4) * (cardWidth + gap))) {
+            let from = currentCoordinates.to;
+            let to = currentCoordinates.to - slidingLength;
+            if (sliderRef.current && to + sliderRef.current.offsetWidth < window.innerWidth / 2) {
                 setCanSlideLeft(false);
                 to = currentCoordinates.to - cardWidth
                 from = currentCoordinates.to
@@ -58,11 +66,12 @@ export default function CardSlider({ children, slideFactor, gap, cardWidth, card
 
     return (
         <div className="relative">
-            <div style={{ height: cardHeight + 80 }} className="relative -top-8 pt-8 overflow-x-hidden overflow-y-hidden">
+            <div style={{ height: cardHeight + cardHeight * .25 }} className="flex items-center relative overflow-x-hidden overflow-y-hidden">
                 <motion.div
                     className="grid grid-flow-col absolute left-0 pl-6"
                     style={{ gap: gap }}
                     animate={{ left: [sliderCoordinate.from, sliderCoordinate.to] }}
+                    ref={sliderRef}
                 >
                     {children}
                 </motion.div>

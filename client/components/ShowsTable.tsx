@@ -1,7 +1,13 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
-import { Edit} from "@mui/icons-material"
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Edit } from "@mui/icons-material"
+import { IShow } from "../utils/interfaces"
 
-export default function ShowsTable({ shows }) {
+interface Props {
+    shows: IShow[];
+    onEdit: (showId: string) => void
+}
+
+export default function ShowsTable({ shows, onEdit }: Props) {
     return (
         <TableContainer component={Paper}>
             <Table sx={{}} aria-label="simple table">
@@ -24,7 +30,11 @@ export default function ShowsTable({ shows }) {
                             </TableCell>
                             <TableCell align="left">{row.genres.map(genre => genre.name).join(",")}</TableCell>
                             <TableCell align="left">{row.description}</TableCell>
-                            <TableCell align="left"><Edit /></TableCell>
+                            <TableCell align="left">
+                                <IconButton onClick={() => onEdit(row._id)}>
+                                    <Edit />
+                                </IconButton>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

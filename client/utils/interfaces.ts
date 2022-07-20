@@ -8,18 +8,20 @@ export interface IFile {
 }
 
 export interface IEpisode {
+    _id?: string;
     number: number;
     video: IFile;
     name?: string;
 }
 
 export interface ISeason {
+    _id?: string;
     number: number;
     episodes?: IEpisode[]
 }
 
 export interface IMovie {
-    _id: string;
+    _id?: string;
     name: string;
     type: "movie";
     genres: IGenre[];
@@ -30,7 +32,7 @@ export interface IMovie {
 }
 
 export interface ISeries {
-    _id: string;
+    _id?: string;
     name: string;
     type: "series";
     genres: IGenre[];
@@ -41,7 +43,7 @@ export interface ISeries {
 }
 
 export interface IShow {
-    _id: string;
+    _id?: string;
     name: string;
     type: "movie" | "series";
     genres: IGenre[];
